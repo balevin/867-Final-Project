@@ -28,12 +28,14 @@ from keras import callbacks
 
 def main():
     #DataGenerator
+
     imsize = cfg.TREE.BASE_SIZE * (2**(cfg.TREE.BRANCH_NUM - 1))  #64, 3
     image_transform = transforms.Compose([
         transforms.Resize(int(imsize * 76 / 64)),
         transforms.RandomCrop(imsize),
         transforms.RandomHorizontalFlip()
     ])
+
     #cfg.DATA_DIR = "data/birds"
     dataset = TextDataset(
         cfg.DATA_DIR,
@@ -56,6 +58,8 @@ def main():
         dataset_val, batchsize=cfg.TRAIN.BATCH_SIZE)
 
     #Create model
+    print(5)
+    print("____________")
     CR_model = model_create_pretrain(dataset)
     print(CR_model.summary())
 
@@ -65,7 +69,8 @@ def main():
             monitor="val_loss",
             save_weights_only=True,
             save_best_only=True)]
-
+    print(6)
+    print("____________")
     step_epoch = int(len(dataset) / cfg.TRAIN.BATCH_SIZE)
     step_epoch_val = int(len(dataset_val) / cfg.TRAIN.BATCH_SIZE)
 

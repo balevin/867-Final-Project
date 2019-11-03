@@ -102,7 +102,7 @@ class DataGenerator_encode(object):
         self.count = 0
         return self
 
-    def __next__(self):
+    def __next__(self):        
         img256_ar = np.empty((0, self.imsize[2], self.imsize[2], 3))
         captions_ar = np.empty((0, cfg.TEXT.WORDS_NUM, 1))
         for _ in range(self.batchsize):

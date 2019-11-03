@@ -1,0 +1,3 @@
+Download the data
+This Data refers to the column of birds download preprocessed data and metadata for the directory structure
+First the STREAM part pretraining we recommend that you do
