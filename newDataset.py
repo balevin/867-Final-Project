@@ -181,39 +181,39 @@ class TextDataset(data.Dataset):
         train_names = self.load_filenames(data_dir, 'train')
         test_names = self.load_filenames(data_dir, 'test')
         data = pd.read_csv('parsedData.csv')
-        if not os.path.isfile(filepath):
-            train_captions = self.load_captions(data_dir, train_names)
-            test_captions = self.load_captions(data_dir, test_names)
+        # if not os.path.isfile(filepath):
+        #     train_captions = self.load_captions(data_dir, train_names)
+        #     test_captions = self.load_captions(data_dir, test_names)
 
-            train_captions, test_captions, ixtoword, wordtoix, n_words = \
-                self.build_dictionary(train_captions, test_captions)
-            with open(filepath, 'wb') as f:
-                pickle.dump(
-                    [train_captions, test_captions, ixtoword, wordtoix],
-                    f,
-                    protocol=2)
-                print('Save to: ', filepath)
-        else:
-            with open(filepath, 'rb') as f:
-                x = pickle.load(f)
-                train_captions, test_captions = x[0], x[1]
-                ixtoword, wordtoix = x[2], x[3]
-                del x
-                n_words = len(ixtoword)
-                print('Load from: ', filepath)
-        if split == 'train':
-            # a list of list: each list contains
-            # the indices of words in a sentence
-            captions = train_captions
-            filenames = train_names
-        else:  # split=='test'
-            captions = test_captions
-            filenames = test_names
+        #     train_captions, test_captions, ixtoword, wordtoix, n_words = \
+        #         self.build_dictionary(train_captions, test_captions)
+        #     with open(filepath, 'wb') as f:
+        #         pickle.dump(
+        #             [train_captions, test_captions, ixtoword, wordtoix],
+        #             f,
+        #             protocol=2)
+        #         print('Save to: ', filepath)
+        # else:
+        #     with open(filepath, 'rb') as f:
+        #         x = pickle.load(f)
+        #         train_captions, test_captions = x[0], x[1]
+        #         ixtoword, wordtoix = x[2], x[3]
+        #         del x
+        #         n_words = len(ixtoword)
+        #         print('Load from: ', filepath)
+        # if split == 'train':
+        #     # a list of list: each list contains
+        #     # the indices of words in a sentence
+        #     captions = train_captions
+        #     filenames = train_names
+        # else:  # split=='test'
+        #     captions = test_captions
+        #     filenames = test_names
         # print("__________________")
-        # captions = list(data['Description'])
-        # vocab, train_captions, ixtoword, wordtoix, n_words = self.build_dictionary(captions)
-        # filenames = train_names
-        return filenames, captions, ixtoword, wordtoix, n_words
+        captions = list(data['Description'])
+        vocab, train_captions, ixtoword, wordtoix, n_words = self.build_dictionary(captions)
+        filenames = train_names
+        return filenames, train_captions, ixtoword, wordtoix, n_words
 
     def load_class_id(self, data_dir, total_num):
         if os.path.isfile(data_dir + '/class_info.pickle'):
@@ -224,26 +224,26 @@ class TextDataset(data.Dataset):
         return class_id
 
     def load_filenames(self, data_dir, split):
-        filepath = '%s/%s/filenames.pickle' % (data_dir, split)
+        # filepath = '%s/%s/filenames.pickle' % (data_dir, split)
 
-        if os.path.isfile(filepath):
-            with open(filepath, 'rb') as f:
-                filenames = pickle.load(f)
-            print('Load filenames from: %s (%d)' % (filepath, len(filenames)))
-        else:
-            filenames = []
+        # if os.path.isfile(filepath):
+        #     with open(filepath, 'rb') as f:
+        #         filenames = pickle.load(f)
+        #     print('Load filenames from: %s (%d)' % (filepath, len(filenames)))
+        # else:
+        #     filenames = []
 
-        # data = pd.read_csv('parsedData.csv')
-        # filenames = list(data['FileName'])
-        # self.bbox = None
+        data = pd.read_csv('parsedData.csv')
+        filenames = list(data['FileName'])
+        self.bbox = None
         return filenames
 
     def get_caption(self, sent_ix):
         # a list of indices for a sentence
-        print('the captions')
-        print(self.captions[sent_ix])
-        print('ok done')
-        print('sent_ix: ', sent_ix)
+        # print('the captions')
+        # print(self.captions[sent_ix])
+        # print('ok done')
+        # print('sent_ix: ', sent_ix)
         sent_caption = np.asarray(self.captions[sent_ix]).astype('int64')
         if (sent_caption == 0).sum() > 0:
             print('ERROR: do not need END (0) token', sent_caption)
@@ -279,8 +279,8 @@ class TextDataset(data.Dataset):
         # print('data dir: ', data_dir)
         # print('key: ', key)
         #  REMEMBER TO SWITCH THIS ONE BACK
-        # img_name= '../celeba-dataset/img_align_celeba/img_align_celeba/' + key
-        img_name = '%s/images/%s.jpg' % (data_dir, key)
+        img_name= '../celeba-dataset/img_align_celeba/img_align_celeba/' + key
+        # img_name = '%s/images/%s.jpg' % (data_dir, key)
         imgs = get_imgs(
             img_name, self.imsize, bbox, self.transform, normalize=self.norm)
         # random select a sentence

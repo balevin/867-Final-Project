@@ -15,7 +15,8 @@ import keras
 from keras.optimizers import Adam
 from keras.backend import tf as ktf
 from config import cfg
-from dataset import TextDataset
+# from dataset import TextDataset
+from newDataset import TextDataset
 from generator import DataGenerator_encode
 from model_load import model_create_pretrain
 from keras.losses import categorical_crossentropy, binary_crossentropy
@@ -42,6 +43,7 @@ def main():
         "train",
         base_size=cfg.TREE.BASE_SIZE,
         transform=image_transform)
+    # print('hi')
     assert dataset
 
     dataset_val = TextDataset(
@@ -58,8 +60,13 @@ def main():
         dataset_val, batchsize=cfg.TRAIN.BATCH_SIZE)
 
     #Create model
-    print(5)
     print("____________")
+    print(dataset[0])
+    # for value in dataset.take(5):
+    #     print(value)
+    # print("Dataset Type: ", type(dataset))
+    # print('First few: ', dataset[0:5])
+    print("Dataset Size: ", len(dataset))
     CR_model = model_create_pretrain(dataset)
     print(CR_model.summary())
 
@@ -69,8 +76,8 @@ def main():
             monitor="val_loss",
             save_weights_only=True,
             save_best_only=True)]
-    print(6)
-    print("____________")
+    # print(6)
+    # print("____________")
     step_epoch = int(len(dataset) / cfg.TRAIN.BATCH_SIZE)
     step_epoch_val = int(len(dataset_val) / cfg.TRAIN.BATCH_SIZE)
 

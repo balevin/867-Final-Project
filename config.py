@@ -12,7 +12,8 @@ cfg = __C
 # Dataset name: flowers, birds
 __C.DATASET_NAME = 'birds'
 __C.CONFIG_NAME = ''
-__C.DATA_DIR = 'data/birds'
+__C.DATA_DIR = '../celeba-dataset'
+# __C.DATA_DIR = 'data/birds'
 
 __C.RNN_TYPE = 'gru'  # 'lstm'
 
@@ -22,7 +23,7 @@ __C.TREE.BASE_SIZE = 64
 
 # Training options
 __C.TRAIN = edict()
-__C.TRAIN.BATCH_SIZE = 20
+__C.TRAIN.BATCH_SIZE = 8
 __C.TRAIN.MAX_EPOCH = 1
 __C.TRAIN.FLAG = True
 #load model path（weight onry）
@@ -40,7 +41,7 @@ __C.TRAIN.RNN_DEC_LOSS_W = 0.1  #decoder_RNN loss_weight
 
 __C.TRAIN.DEC_LR = 0.001  #pretrain decoder_RNN earning rate
 __C.TRAIN.DEC_SAVE_PATH = 'model/cnn_rnn_encoder.h5'
-__C.TRAIN.DEC_MAX_EPOCH = 10
+__C.TRAIN.DEC_MAX_EPOCH = 1
 
 # Modal options
 __C.GAN = edict()

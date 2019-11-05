@@ -16,7 +16,8 @@ import keras
 from keras.optimizers import Adam
 from keras.backend import tf as ktf
 from config import cfg
-from dataset import TextDataset
+# from dataset import TextDataset
+from newDataset import TextDataset
 from generator import DataGenerator
 from model import *
 from model_load import model_create
@@ -26,6 +27,7 @@ from copy import deepcopy
 from keras.preprocessing.image import load_img
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import cv2
 
 
 def main():
@@ -43,7 +45,12 @@ def main():
         base_size=cfg.TREE.BASE_SIZE,
         transform=image_transform)
     assert dataset
-
+    # print("first: ", dataset[0])
+    # print('Size: ', len(dataset[0]))
+    # print('first first: ', dataset[0][0])
+    # print('first first size: ', len(dataset[0][0]))
+    # print('first first first: ', dataset[0][0][0].shape)
+    # print('first first first third: ', dataset[0][0][0][2])
     traingenerator = DataGenerator(dataset, batchsize=cfg.TRAIN.BATCH_SIZE)
 
     ##Create model
@@ -73,7 +80,7 @@ def main():
     print("batch_size: {}  step_epoch : {} srong_step_epoch {}".format(
         batch_size, step_epoch, wrong_step_epoch))
 
-    for epoch in range(total_epoch):
+    for epoch in range(1):
         total_D_loss = 0
         total_D_acc = 0
         total_D_wrong_loss = 0
@@ -86,10 +93,28 @@ def main():
 
         for batch in tqdm(range(step_epoch)):
 
+            # print('prezeropad: ', captions_ar_prezeropad)
             image_list, captions_ar, captions_ar_prezeropad, \
                 z_code, eps_code, mask, keys_list, captions_label, \
                     real_label, fake_label = next(traingenerator)
-
+            # print('image list length: ', len(image_list))
+            # print('first Image: ', image_list[0]) 
+            # print('first image size: ', image_list[0].shape) # (20, 64, 64, 3)
+            img  = image_list[0][0]
+            img = img - np.amin(img)
+            img = np.minimum(img, 1)
+            img = 255*img
+            # print('single image shape: ', img.shape)
+            # print('min: ', np.amin(img))
+            # print('max: ', np.amax(img))
+            # print(img)
+            # print('the caption: ', captions_ar)
+            # cv2.imwrite('face_img.jpg', img)
+            # cv2.imshow("image", img)
+            
+            # return
+            # print('captions length: ', captions_ar.shape) #(20,18)
+            # print('captions: ', captions_ar)
             mask = np.where(mask == 1, -float("inf"), 0)
 
             if cfg.TREE.BRANCH_NUM == 1:
